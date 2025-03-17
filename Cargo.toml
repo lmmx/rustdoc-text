@@ -1,0 +1,37 @@
+[package]
+name = "rustdoc-text"
+version = "0.1.0"
+edition = "2021"
+description = "A lightweight CLI tool to view Rust documentation as plain text"
+license = "MIT"
+repository = "https://github.com/lmmx/rustdoc-text"
+readme = "README.md"
+keywords = ["rustdoc", "documentation", "cli", "text"]
+categories = ["command-line-utilities", "development-tools"]
+
+[dependencies]
+clap = { version = "4.4", features = ["derive"] }
+comrak = "0.18"
+scraper = "0.17"
+reqwest = { version = "0.11", features = ["blocking"] }
+anyhow = "1.0"
+dirs = "5.0"
+tempfile = "3.8"
+
+[[bin]]
+name = "rustdoc-text"
+path = "src/main.rs"
+
+[profile.dev]
+opt-level = 0
+lto = false
+codegen-units = 256
+panic = "abort"
+debug = false
+strip = "debuginfo"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
