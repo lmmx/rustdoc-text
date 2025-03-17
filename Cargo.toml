@@ -1,13 +1,21 @@
 [package]
 name = "rustdoc-text"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "A lightweight CLI tool to view Rust documentation as plain text"
+description = "A lightweight library and CLI tool to view Rust documentation as plain text"
 license = "MIT"
 repository = "https://github.com/lmmx/rustdoc-text"
 readme = "README.md"
 keywords = ["rustdoc", "documentation", "cli", "text"]
 categories = ["command-line-utilities", "development-tools"]
+
+[lib]
+name = "rustdoc_text"
+path = "src/lib.rs"
+
+[[bin]]
+name = "rustdoc-text"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.4", features = ["derive"] }
@@ -17,10 +25,6 @@ anyhow = "1.0"
 dirs = "5.0"
 tempfile = "3.8"
 htmd = "0.1.6"
-
-[[bin]]
-name = "rustdoc-text"
-path = "src/main.rs"
 
 [profile.dev]
 opt-level = 0

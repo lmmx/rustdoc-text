@@ -1,6 +1,6 @@
 # rustdoc-text
 
-A lightweight CLI tool to view Rust documentation as plain text (Markdown) in the terminal.
+A lightweight library and CLI tool to view Rust documentation as plain text (Markdown) in the terminal.
 
 Similar to tools like `pydoc` and `godoc`, but for Rust documentation.
 
@@ -10,6 +10,7 @@ Similar to tools like `pydoc` and `godoc`, but for Rust documentation.
 - Access documentation locally (builds as needed) or from docs.rs
 - Lightweight and fast with minimal dependencies
 - Simple command-line interface
+- Can be used as a library in your Rust code
 
 ## Installation
 
@@ -17,7 +18,7 @@ Similar to tools like `pydoc` and `godoc`, but for Rust documentation.
 cargo install rustdoc-text
 ```
 
-## Usage
+## Command-line Usage
 
 ```bash
 # View documentation for a crate
@@ -31,6 +32,28 @@ rustdoc-text --online tokio
 
 # Get help
 rustdoc-text --help
+```
+
+## Library Usage
+
+```rust
+use rustdoc_text::Config;
+use anyhow::Result;
+
+fn main() -> Result<()> {
+    // Simple usage
+    let docs = Config::new("serde")
+        .with_online(true)
+        .execute()?;
+    
+    println!("{}", docs);
+    
+    // Or use the functions directly
+    let tokio_docs = rustdoc_text::fetch_online_docs("tokio", Some("Runtime"))?;
+    println!("{}", tokio_docs);
+    
+    Ok(())
+}
 ```
 
 ## How it works
