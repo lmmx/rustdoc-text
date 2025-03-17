@@ -1,12 +1,12 @@
 # rustdoc-text
 
-A lightweight CLI tool to view Rust documentation as plain text in the terminal.
+A lightweight CLI tool to view Rust documentation as plain text (Markdown) in the terminal.
 
 Similar to tools like `pydoc` and `godoc`, but for Rust documentation.
 
 ## Features
 
-- View documentation for any Rust crate directly in your terminal
+- View documentation for any Rust crate directly in your terminal as Markdown
 - Access documentation locally (builds as needed) or from docs.rs
 - Lightweight and fast with minimal dependencies
 - Simple command-line interface
@@ -35,15 +35,24 @@ rustdoc-text --help
 
 ## How it works
 
-This tool works in two modes:
+This tool:
 
-1. **Local mode** (default): Creates a temporary cargo project, adds the requested crate as a dependency, builds documentation with `cargo doc`, extracts the HTML content, and converts it to plain text.
+1. Fetches Rust documentation (either by building locally or from docs.rs)
+2. Extracts the main content section from the HTML
+3. Converts the HTML to Markdown using the htmd library
+4. Outputs clean, readable Markdown to stdout
 
-2. **Online mode** (with `--online` flag): Fetches the documentation directly from docs.rs and converts it to plain text.
+## Why Markdown?
 
-## Publishing
+Markdown is a lightweight markup language that's very readable as plain text, making it ideal for terminal output. It preserves the structure of the documentation while being much more readable than raw HTML.
 
-This crate is available on [crates.io](https://crates.io/crates/rustdoc-text).
+## Dependencies
+
+- `htmd`: For HTML to Markdown conversion
+- `clap`: For command-line argument parsing
+- `reqwest`: For fetching online documentation
+- `anyhow`: For error handling
+- `scraper`: For HTML parsing
 
 ## License
 

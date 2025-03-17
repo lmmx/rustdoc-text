@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Result};
 use clap::Parser;
-use comrak::{markdown_to_html, ComrakOptions};
+use htmd::HtmlToMarkdown;
 use reqwest::blocking::Client;
 use scraper::{Html, Selector};
 use std::fs;
@@ -65,11 +65,6 @@ fn fetch_local_docs(crate_name: &str, item_path: Option<&str>) -> Result<String>
     // Create a temporary directory for the operation
     let temp_dir = tempdir()?;
     let temp_path = temp_dir.path();
-    
-    // Try to find the crate in the local cargo registry first
-    let cargo_home = dirs::home_dir()
-        .ok_or_else(|| anyhow!("Could not determine home directory"))?
-        .join(".cargo");
     
     // Check if we're in a cargo project
     let current_dir = std::env::current_dir()?;
@@ -140,7 +135,7 @@ fn fetch_local_docs(crate_name: &str, item_path: Option<&str>) -> Result<String>
     process_html_content(&html_content)
 }
 
-/// Process HTML content to extract and convert relevant documentation parts
+/// Process HTML content to extract and convert relevant documentation parts to Markdown
 fn process_html_content(html: &str) -> Result<String> {
     let document = Html::parse_document(html);
     
@@ -151,71 +146,45 @@ fn process_html_content(html: &str) -> Result<String> {
         .next()
         .ok_or_else(|| anyhow!("Could not find main content section"))?;
     
-    // Convert HTML to Markdown
+    // Get HTML content
     let html_content = main_content.inner_html();
     
-    // First remove script tags which can cause issues
-    let script_selector = Selector::parse("script").unwrap();
-    let mut content_html = html_content.clone();
-    for script in document.select(&script_selector) {
-        let script_html = script.html();
-        content_html = content_html.replace(&script_html, "");
-    }
+    // Convert HTML to Markdown using htmd
+    let converter = HtmlToMarkdown::builder()
+        .skip_tags(vec!["script", "style"])
+        .build();
     
-    // Simple HTML to plain text conversion
-    let plain_text = html_to_text(&content_html)?;
+    let markdown = converter.convert(&html_content)
+        .map_err(|e| anyhow!("HTML to Markdown conversion failed: {}", e))?;
     
-    Ok(plain_text)
-}
-
-/// Convert HTML to plain text
-fn html_to_text(html: &str) -> Result<String> {
-    let document = Html::parse_document(html);
-    
-    // First extract text from HTML (simplified approach)
-    let mut plain_text = String::new();
-    extract_text_from_node(&document.root_element(), &mut plain_text);
-    
-    // Clean up the text (replace multiple newlines, etc.)
-    let cleaned_text = plain_text
-        .lines()
-        .map(|line| line.trim())
-        .filter(|line| !line.is_empty())
-        .collect::<Vec<_>>()
-        .join("\n");
+    // Clean up the markdown (replace multiple newlines, etc.)
+    let cleaned_text = clean_markdown(&markdown);
     
     Ok(cleaned_text)
 }
 
-/// Helper function to extract text from HTML nodes
-fn extract_text_from_node(node: &scraper::Node, output: &mut String) {
-    match node.value() {
-        scraper::node::Node::Text(text) => {
-            output.push_str(text);
-            output.push('\n');
+/// Clean up the markdown output to make it more readable in terminal
+fn clean_markdown(markdown: &str) -> String {
+    // Replace 3+ consecutive newlines with 2 newlines
+    let mut result = String::new();
+    let mut last_was_newline = false;
+    let mut newline_count = 0;
+    
+    for c in markdown.chars() {
+        if c == '\n' {
+            newline_count += 1;
+            if newline_count <= 2 {
+                result.push(c);
+            }
+            last_was_newline = true;
+        } else {
+            if last_was_newline {
+                newline_count = 0;
+                last_was_newline = false;
+            }
+            result.push(c);
         }
-        scraper::node::Node::Element(element) => {
-            // Skip if it's a script or style tag
-            if element.name.local.as_ref() == "script" || element.name.local.as_ref() == "style" {
-                return;
-            }
-            
-            // Add spacing for block elements
-            let block_elements = ["div", "p", "h1", "h2", "h3", "h4", "h5", "h6", "pre", "blockquote", "li"];
-            if block_elements.contains(&element.name.local.as_ref()) {
-                output.push('\n');
-            }
-            
-            // Process child nodes
-            for child in node.children() {
-                extract_text_from_node(&child, output);
-            }
-            
-            // Add spacing after block elements
-            if block_elements.contains(&element.name.local.as_ref()) {
-                output.push('\n');
-            }
-        }
-        _ => {}
     }
+    
+    result
 }
