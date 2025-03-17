@@ -1,7 +1,3 @@
-//! # rustdoc-text
-//! //!
-//! //! A lightweight CLI tool to view Rust documentation as plain text.
-//! //!
 #![doc = include_str!("../README.md")]
 use anyhow::{anyhow, Result};
 use clap::Parser;
