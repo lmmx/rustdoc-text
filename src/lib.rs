@@ -104,9 +104,7 @@ pub fn fetch_local_docs(crate_name: &str, item_path: Option<&str>) -> Result<Str
     let current_dir = std::env::current_dir()?;
     let is_cargo_project = current_dir.join("Cargo.toml").exists();
 
-    let doc_path: PathBuf;
-
-    if is_cargo_project {
+    let doc_path: PathBuf = if is_cargo_project {
         // We're in a cargo project, build docs for the current project
         let status = Command::new("cargo")
             .args(["doc", "--no-deps"])
@@ -117,7 +115,7 @@ pub fn fetch_local_docs(crate_name: &str, item_path: Option<&str>) -> Result<Str
             return Err(anyhow!("Failed to build documentation with cargo doc"));
         }
 
-        doc_path = current_dir.join("target").join("doc");
+        current_dir.join("target").join("doc")
     } else {
         // Try to build documentation for an external crate
         let status = Command::new("cargo")
@@ -148,8 +146,8 @@ pub fn fetch_local_docs(crate_name: &str, item_path: Option<&str>) -> Result<Str
             ));
         }
 
-        doc_path = temp_path.join("temp_project").join("target").join("doc");
-    }
+        temp_path.join("temp_project").join("target").join("doc")
+    };
 
     // Find the HTML files
     let crate_doc_path = doc_path.join(crate_name.replace('-', "_"));
