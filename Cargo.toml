@@ -7,7 +7,7 @@ license = "MIT"
 name = "rustdoc-text"
 readme = "README.md"
 repository = "https://github.com/lmmx/rustdoc-text"
-version = "0.3.2"
+version = "0.3.3"
 
 [package.metadata.binstall]
 pkg-fmt = "tgz"
