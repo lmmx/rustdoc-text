@@ -41,22 +41,31 @@ use tempfile::tempdir;
 pub fn fetch_online_docs(crate_name: &str, item_path: Option<&str>) -> Result<String> {
     let client = Client::new();
 
-    // Construct the URL for docs.rs
-    let mut url = format!("https://docs.rs/{}", crate_name);
-    if let Some(path) = item_path {
-        url = format!("{}/{}", url, path.replace("::", "/"));
-    }
+    let url = if let Some(path) = item_path {
+        // Parse the path to construct the proper docs.rs URL
+        // Expected input format: "struct.Rope" or "module::struct.Name"
+        let path_with_html = if !path.ends_with(".html") {
+            format!("{}.html", path)
+        } else {
+            path.to_string()
+        };
+
+        // Replace :: with / for nested items
+        let url_path = path_with_html.replace("::", "/");
+
+        format!("https://docs.rs/{}/latest/{}/{}", crate_name, crate_name, url_path)
+    } else {
+        format!("https://docs.rs/{}/latest/{}/", crate_name, crate_name)
+    };
 
     // Fetch the HTML content
     let response = client.get(&url).send()?;
-
     if !response.status().is_success() {
         return Err(anyhow!(
             "Failed to fetch documentation. Status: {}",
             response.status()
         ));
     }
-
     let html_content = response.text()?;
     process_html_content(&html_content)
 }
