@@ -1,0 +1,20 @@
+[workspace]
+git_tag_name = "{{ package }}-v{{ version }}"
+
+[changelog]
+commit_parsers = [
+  { group = "<!-- 0 -->Breaking", message = "!:" },
+  { group = "<!-- 1 -->Features", message = "^feat" },
+  { group = "<!-- 2 -->Bug Fixes", message = "^fix" },
+  { group = "<!-- 3 -->Performance", message = "^perf" },
+  { group = "<!-- 4 -->Documentation", message = "^doc" },
+  { group = "<!-- 5 -->Refactor", message = "^refactor" },
+  { group = "<!-- 6 -->Testing", message = "^test" },
+  { group = "<!-- 7 -->Build System and CI", message = "^build" },
+  { group = "<!-- 7 -->Build System and CI", message = "^ci" },
+  { group = "<!-- 8 -->Styling", message = "^style" },
+  { message = "^chore\\(release\\)", skip = true },
+  { message = "^revert", skip = true },
+  # Separate to avoid matching all (do not sort)
+  { group = "<!-- 9 -->Other", message = ".*" },
+]

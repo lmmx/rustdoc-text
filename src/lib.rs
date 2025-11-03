@@ -1,10 +1,10 @@
 //! # rustdoc-text
-//! 
+//!
 //! A lightweight library to view Rust documentation as plain text (Markdown).
-//! 
+//!
 //! This crate provides both a library and a binary for accessing Rust documentation
 //! in plain text format.
-//! 
+//!
 #![doc = include_str!("../README.md")]
 
 use anyhow::{anyhow, Result};
@@ -53,7 +53,10 @@ pub fn fetch_online_docs(crate_name: &str, item_path: Option<&str>) -> Result<St
         // Replace :: with / for nested items
         let url_path = path_with_html.replace("::", "/");
 
-        format!("https://docs.rs/{}/latest/{}/{}", crate_name, crate_name, url_path)
+        format!(
+            "https://docs.rs/{}/latest/{}/{}",
+            crate_name, crate_name, url_path
+        )
     } else {
         format!("https://docs.rs/{}/latest/{}/", crate_name, crate_name)
     };
@@ -246,10 +249,10 @@ pub fn clean_markdown(markdown: &str) -> String {
 pub struct Config {
     /// The name of the crate to fetch documentation for.
     pub crate_name: String,
-    
+
     /// Optional path to a specific item within the crate.
     pub item_path: Option<String>,
-    
+
     /// Whether to fetch documentation from docs.rs instead of building locally.
     pub online: bool,
 }
@@ -277,7 +280,7 @@ impl Config {
             online: false,
         }
     }
-    
+
     /// Set the item path for the configuration.
     ///
     /// # Arguments
@@ -296,7 +299,7 @@ impl Config {
         self.item_path = Some(item_path.into());
         self
     }
-    
+
     /// Set whether to fetch documentation from docs.rs.
     ///
     /// # Arguments
@@ -315,7 +318,7 @@ impl Config {
         self.online = online;
         self
     }
-    
+
     /// Execute the configuration to fetch documentation.
     ///
     /// # Returns

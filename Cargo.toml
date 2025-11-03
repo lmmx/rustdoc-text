@@ -1,13 +1,13 @@
 [package]
-name = "rustdoc-text"
-version = "0.2.0"
-edition = "2021"
-description = "A lightweight library and CLI tool to view Rust documentation as plain text"
-license = "MIT"
-repository = "https://github.com/lmmx/rustdoc-text"
-readme = "README.md"
-keywords = ["rustdoc", "documentation", "cli", "text"]
 categories = ["command-line-utilities", "development-tools"]
+description = "A lightweight library and CLI tool to view Rust documentation as plain text"
+edition = "2021"
+keywords = ["cli", "documentation", "rustdoc", "text"]
+license = "MIT"
+name = "rustdoc-text"
+readme = "README.md"
+repository = "https://github.com/lmmx/rustdoc-text"
+version = "0.2.0"
 
 [lib]
 name = "rustdoc_text"
@@ -18,24 +18,23 @@ name = "rustdoc-text"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "4.4", features = ["derive"] }
-scraper = "0.17"
-reqwest = { version = "0.11", features = ["blocking"] }
 anyhow = "1.0"
-dirs = "5.0"
-tempfile = "3.8"
+clap = { features = ["derive"], version = "4.4" }
 htmd = "0.1.6"
+reqwest = { features = ["blocking"], version = "0.11" }
+scraper = "0.17"
+tempfile = "3.8"
 
 [profile.dev]
-opt-level = 0
-lto = false
 codegen-units = 256
-panic = "abort"
 debug = false
+lto = false
+opt-level = 0
+panic = "abort"
 strip = "debuginfo"
 
 [profile.release]
-opt-level = 3
-lto = true
 codegen-units = 1
+lto = true
+opt-level = 3
 strip = true
