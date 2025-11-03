@@ -11,15 +11,15 @@ version = "0.3.2"
 
 [package.metadata.binstall]
 pkg-fmt = "tgz"
-pkg-url = "https://github.com/lmmx/whichdoc/releases/download/whichdoc-v{ version }/whichdoc-{ target }-v{ version }.tar.gz"
+pkg-url = "https://github.com/lmmx/rustdoc-text/releases/download/rustdoc-text-v{ version }/rustdoc-text-{ target }-v{ version }.tar.gz"
 
 [package.metadata.binstall.overrides.aarch64-pc-windows-msvc]
 pkg-fmt = "zip"
-pkg-url = "https://github.com/lmmx/whichdoc/releases/download/whichdoc-v{ version }/whichdoc-aarch64-pc-windows-msvc-v{ version }.zip"
+pkg-url = "https://github.com/lmmx/rustdoc-text/releases/download/rustdoc-text-v{ version }/rustdoc-text-aarch64-pc-windows-msvc-v{ version }.zip"
 
 [package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
 pkg-fmt = "zip"
-pkg-url = "https://github.com/lmmx/whichdoc/releases/download/whichdoc-v{ version }/whichdoc-x86_64-pc-windows-msvc-v{ version }.zip"
+pkg-url = "https://github.com/lmmx/rustdoc-text/releases/download/rustdoc-text-v{ version }/rustdoc-text-x86_64-pc-windows-msvc-v{ version }.zip"
 
 [lib]
 name = "rustdoc_text"
