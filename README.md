@@ -45,13 +45,13 @@ fn main() -> Result<()> {
     let docs = Config::new("serde")
         .with_online(true)
         .execute()?;
-    
+
     println!("{}", docs);
-    
+
     // Or use the functions directly
     let tokio_docs = rustdoc_text::fetch_online_docs("tokio", Some("Runtime"))?;
     println!("{}", tokio_docs);
-    
+
     Ok(())
 }
 ```
