@@ -34,6 +34,7 @@ rustdoc-text serde Deserializer
 
 # View documentation for a specific sub-item in a crate
 rustdoc-text --online ropey struct.Rope
+rustdoc-text --online ropey iter::index # sometimes needed to get the right page
 
 # Get help
 rustdoc-text --help
