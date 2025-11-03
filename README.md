@@ -20,19 +20,29 @@ cargo install rustdoc-text
 
 ## Command-line Usage
 
+- Usage note: `--online` is recommended!
+
 ```bash
 # View documentation for a crate
 rustdoc-text serde
 
+# View documentation from docs.rs (instead of building locally)
+rustdoc-text --online tokio
+
 # View documentation for a specific item in a crate
 rustdoc-text serde Deserializer
 
-# View documentation from docs.rs (instead of building locally)
-rustdoc-text --online tokio
+# View documentation for a specific sub-item in a crate
+rustdoc-text --online ropey struct.Rope
 
 # Get help
 rustdoc-text --help
 ```
+
+If you're not getting the particular URL resolved that you want, [read the source here][linktosrc]
+to see how it is being converted from your input.
+
+[linktosrc]: https://github.com/lmmx/rustdoc-text/blob/master/src/lib.rs#L41
 
 ## Library Usage
 
